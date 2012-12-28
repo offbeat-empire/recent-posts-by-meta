@@ -5,23 +5,19 @@ License: GPLv3
 License URI: http://www.gnu.org/copyleft/gpl.html
 Tags: recent posts, tag, tags, widget, post list, exclude, include
 Requires at least: 2.9
-Tested up to: 3.4.1
-Stable tag: 1.0
+Tested up to: 3.5
+Stable tag: 1.1
 
-Creates a widget with a list of recent posts belonging to selected tags
+This plugin creates a widget with a list of recent posts belonging to selected tags
 
 == Description ==
 This plugin creates a new widget which allows you to show recent posts by tags. The default Recent Posts widget in WordPress shows recent posts belonging to all categories. But this plugin gives you the option to show recent posts by tags. It is helpful if you are mainly using tags to categorize your posts.
 
 Visit developer's blog at <a href="http://www.prasannasp.net/">prasannasp.net</a>
 
-<strong>Other plugins from the developer</strong>
-<ul>
-<li><a href="http://wordpress.org/extend/plugins/custom-recent-posts-widget/">Custom Recent Posts Widget</a></li>
-<li><a href="http://wordpress.org/extend/plugins/follow-category-feeds/">Follow WordPress Category Feeds</a></li>
-<li><a href="http://wordpress.org/extend/plugins/kannada-comment/">Kannada Comment</a></li>
-<li><a href="http://wordpress.org/extend/plugins/kagga/">Mankutimmana Kagga</a></li>
-</ul>
+<strong>Support:</strong> Please post your support questions at <a href="http://forum.prasannasp.net/forum/plugin-support/wordpress-recent-posts-by-tags/">Recent Posts by Tags plugin support forum</a>
+
+Visit <a href="http://www.prasannasp.net/wordpress-plugins/">this page</a> for more <strong>WordPress Plugins</strong> from the developer.
 
 == Installation ==
 
@@ -53,6 +49,10 @@ The widget inherits the style of default WordPress Recent Posts widget. You can 
 }`
 
 == Changelog ==
+
+= 1.1 =
+
+* Added option to show post date. Code taken from Recent Posts widget in WordPress 3.5
 
 = 1.0 =
 
