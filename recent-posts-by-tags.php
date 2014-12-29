@@ -1,16 +1,13 @@
 <?php
 /*
-Plugin Name: Recent Posts by Tags
-Plugin URI: http://www.prasannasp.net/wordpress-plugins/recent-posts-by-tags/
-Description: Displays a list of recent posts related to a single tag or multiple tags. You can select the number of posts to display in widget settings. Widget title can be changed.
-Version: 1.1
-Author: Prasanna SP
-Author URI: http://www.prasannasp.net/
+Plugin Name: Recent Posts by Meta
+Description: Displays a list of recent posts with a certain meta key/value. You can select the number of posts to display in widget settings. Widget title can be changed.
+Version: 1.0
+Author: Kellbot
+Author URI: http://www.kellbot.com/
 */
 
-/*  This file is part of Recent Posts by Tags plugin. Copyright 2012 Prasanna SP (email: prasanna@prasannasp.net)
-
-    Recent Posts by Tags plugin is free software: you can redistribute it and/or modify
+/*  Recent Posts by Meta plugin is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
@@ -25,14 +22,14 @@ Author URI: http://www.prasannasp.net/
 */
 
 // Construct Widget
-class Recent_Posts_By_Tags_Widget extends WP_Widget {
-			
+class Recent_Posts_By_Meta_Widget extends WP_Widget {
+			 
 	function __construct() {
     	$widget_ops = array(
 			'classname'   => 'widget_recent_entries', 
-			'description' => __('Display a list of recent post entries from one or more Tags. You can choose the number of posts to show.')
+			'description' => __('Display a list of recent post entries based on postmeta. You can choose the number of posts to show.')
 		);
-    	parent::__construct('recent-posts-by-tags', __('Recent Posts by Tags'), $widget_ops);
+    	parent::__construct('recent-posts-by-tags', __('Recent Posts by Meta'), $widget_ops);
 	}
 
 	function widget($args, $instance) {
@@ -44,15 +41,16 @@ class Recent_Posts_By_Tags_Widget extends WP_Widget {
 			
 			if ( ! $number = absint( $instance['number'] ) ) $number = 5;
 						
-			if( ! $tags = $instance["tags"] )  $tags='';
-			
+			if( ! $meta_value = $instance["meta_value"] )  $meta_value='';
+			if( ! $meta_key = $instance["meta_key"] )  $meta_key='';
 						
 			// array to call recent posts.
 			
 			$rpbt_args=array(
 						   
 				'showposts' => $number,
-				'tag__in'=> $tags,
+				'meta_key' => $meta_key,
+				'meta_value'=> $meta_value,
 															
 				);
 			
@@ -101,7 +99,8 @@ class Recent_Posts_By_Tags_Widget extends WP_Widget {
 	function update( $new_instance, $old_instance ) {
 		$instance = $old_instance;
 		$instance['title'] = strip_tags($new_instance['title']);
-        	$instance['tags'] = $new_instance['tags'];
+        $instance['meta_value'] = $new_instance['meta_value'];
+        $instance['meta_key'] = $new_instance['meta_key'];
 		$instance['number'] = absint($new_instance['number']);
 		$instance['show_date'] = (bool) $new_instance['show_date'];
 	     
@@ -112,7 +111,8 @@ class Recent_Posts_By_Tags_Widget extends WP_Widget {
 		$title = isset($instance['title']) ? esc_attr($instance['title']) : 'Recent Posts';
 		$number = isset($instance['number']) ? absint($instance['number']) : 5;
 		$show_date = isset( $instance['show_date'] ) ? (bool) $instance['show_date'] : false;
-		
+		$meta_key = isset($instance['meta_key']) ? esc_attr($instance['meta_key']) : '';
+		$meta_value = isset($instance['meta_value']) ? esc_attr($instance['meta_value']) : '';
 ?>
         <p><label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?></label>
         <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" /></p>
@@ -122,40 +122,21 @@ class Recent_Posts_By_Tags_Widget extends WP_Widget {
         
         <p><input class="checkbox" type="checkbox" <?php checked( $show_date ); ?> id="<?php echo $this->get_field_id( 'show_date' ); ?>" name="<?php echo $this->get_field_name( 'show_date' ); ?>" />
 	<label for="<?php echo $this->get_field_id( 'show_date' ); ?>"><?php _e( 'Display post date?' ); ?></label></p>
-        
-        <p>
-            <label for="<?php echo $this->get_field_id('tags'); ?>"><?php _e('Select Tags to include in the recent posts list:');?> 
-            
-                <?php
-                   $tags =  get_tags('hide_empty=0');
-                     echo "<br/>";
-                     foreach ($tags as $tag) {
-                         $option='<input type="checkbox" id="'. $this->get_field_id( 'tags' ) .'[]" name="'. $this->get_field_name( 'tags' ) .'[]"';
-                            if (is_array($instance['tags'])) {
-                                foreach ($instance['tags'] as $tags) {
-                                    if($tags==$tag->term_id) {
-                                         $option=$option.' checked="checked"';
-                                    }
-                                }
-                            }
-                            $option .= ' value="'.$tag->term_id.'" />';
-        		    $option .= '&nbsp;';
-                            $option .= $tag->name . ' ';
-                            $option .= '<br />';
-                            echo $option;
-                         }
-                    
-                    ?>
-            </label>
-        </p>
-        
+
+        <p><label for="<?php echo $this->get_field_id('meta_key'); ?>"><?php _e('Meta Key:'); ?></label>
+        <input class="widefat" id="<?php echo $this->get_field_id('meta_key'); ?>" name="<?php echo $this->get_field_name('meta_key'); ?>" type="text" value="<?php echo $meta_key; ?>" /></p>
+
+      <p><label for="<?php echo $this->get_field_id('meta_value'); ?>"><?php _e('Meta Value:'); ?></label>
+        <input class="widefat" id="<?php echo $this->get_field_id('meta_value'); ?>" name="<?php echo $this->get_field_name('meta_value'); ?>" type="text" value="<?php echo $meta_value; ?>" /></p>
+
+
 <?php
 	}
 }
 
-function rpbt_register_widgets() {
-	register_widget( 'Recent_Posts_By_Tags_Widget' );
+function rpbm_register_widgets() {
+	register_widget( 'Recent_Posts_By_Meta_Widget' );
 }
 
-add_action( 'widgets_init', 'rpbt_register_widgets' );
+add_action( 'widgets_init', 'rpbm_register_widgets' );
 ?>
