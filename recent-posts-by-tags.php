@@ -77,10 +77,10 @@ class Recent_Posts_By_Meta_Widget extends WP_Widget {
 		?>
 
 			<li class="rpbt-item">
-
-				<a  href="<?php the_permalink(); ?>" rel="bookmark" title="Permanent link to <?php the_title_attribute(); ?>" class="rpbt-title"><?php the_title(); ?></a>
+				<?php echo get_avatar(get_the_author_meta( 'ID' ), 14); ?>
+				<a  href="<?php the_permalink(); ?>" rel="bookmark" title="Permanent link to <?php the_title_attribute(); ?>" class="rpbt-title"><?php the_title(); ?></a> by <?php the_author(); ?>
 				<?php if ( $show_date ) : ?>
-				<span class="rpbt-date"><?php echo "("; ?><?php echo get_the_date(); ?><?php echo ")"; ?></span>
+				<span class="rpbt-date"><?php echo "("; ?><?php echo get_the_date('M d'); ?><?php echo ")"; ?></span>
 				<?php endif; ?>
 		
 			</li>
